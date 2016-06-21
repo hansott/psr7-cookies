@@ -6,14 +6,14 @@ use GuzzleHttp\Psr7\Response;
 
 final class SetCookieTest extends \PHPUnit_Framework_TestCase
 {
-    public function test_it_gets_and_sets()
+    public function test_it_can_be_added_to_a_psr_response()
     {
         $cookie = new SetCookie('name', 'value');
         $responseWithCookie = $cookie->addToResponse(new Response());
         $httpResponse = \GuzzleHttp\Psr7\str($responseWithCookie);
-        $expected = 'HTTP/1.1 200 OK'."\n";
+        $expected = 'HTTP/1.1 200 OK'."\r\n";
         $expected .= 'Set-Cookie: name=value'."\r\n\r\n";
-        // $this->assertEquals($expected, $httpResponse);
+        $this->assertEquals($expected, $httpResponse);
     }
 
     public function test_it_converts_to_header_value()
