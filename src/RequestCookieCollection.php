@@ -48,18 +48,13 @@ final class RequestCookieCollection implements CookieCollectionInterface
      */
     public static function createFromRequest(ServerRequestInterface $request) : RequestCookieCollection
     {
-        $collection = new static();
-        $cookies = $request->getCookieParams();
-        foreach ($cookies as $name => $value) {
-            $collection->addCookie(new Cookie($name, $value));
+        $cookies = [];
+        $cookieParams = $request->getCookieParams();
+        foreach ($cookieParams as $name => $value) {
+            $cookies[] = new Cookie($name, $value);
         }
 
-        return $collection;
-    }
-
-    private function addCookie(Cookie $cookie)
-    {
-        $this->cookies[$cookie->getName()] = $cookie;
+        return new static($cookies);
     }
 
     /**
