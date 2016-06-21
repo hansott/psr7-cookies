@@ -16,14 +16,27 @@ final class ResponseCookieCollection implements CookieCollectionInterface
      */
     public function __construct(array $cookies)
     {
+        $this->guardThatTheseAreCookies($cookies);
+
         foreach ($cookies as $cookie) {
-            $this->addCookie($cookie);
+            $this->cookies[$cookie->getName()] = $cookie;
         }
     }
 
-    public function addCookie(SetCookie $cookie)
+    private function guardThatTheseAreCookies(array $cookies)
     {
-        $this->cookies[$cookie->getName()] = $cookie;
+        foreach ($cookies as $index => $cookie) {
+            if (!$cookie instanceof SetCookie) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Expected array of "%s" instances but instead got "%s" at index %d',
+                        static::class,
+                        is_object($cookie) ? get_class($cookie) : gettype($cookie),
+                        $index
+                    )
+                );
+            }
+        }
     }
 
     /**
