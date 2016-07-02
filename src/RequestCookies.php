@@ -5,14 +5,16 @@ namespace HansOtt\PSR7Cookies;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RequestCookieCollection implements CookieCollectionInterface
+final class RequestCookies implements CookieCollection
 {
     private $cookies = [];
 
     /**
-     * CookieCollection constructor.
+     * RequestCookies constructor.
      *
      * @param Cookie[] $cookies
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(array $cookies = [])
     {
@@ -44,9 +46,9 @@ final class RequestCookieCollection implements CookieCollectionInterface
      *
      * @param ServerRequestInterface $request
      *
-     * @return RequestCookieCollection
+     * @return RequestCookies
      */
-    public static function createFromRequest(ServerRequestInterface $request) : RequestCookieCollection
+    public static function createFromRequest(ServerRequestInterface $request) : RequestCookies
     {
         $cookies = [];
         $cookieParams = $request->getCookieParams();

@@ -5,6 +5,6 @@ namespace HansOtt\PSR7Cookies;
 
 use Iterator;
 
-interface CookieCollectionInterface extends Iterator
+interface CookieCollection extends Iterator
 {
 }

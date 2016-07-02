@@ -2,6 +2,7 @@
 
 namespace HansOtt\PSR7Cookies;
 
+use DateTimeImmutable;
 use GuzzleHttp\Psr7\Response;
 
 final class SetCookieTest extends \PHPUnit_Framework_TestCase
@@ -46,7 +47,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $expected = sprintf('name=deleted; expires=%s', gmdate('D, d-M-Y H:i:s T', 1));
         $this->assertEquals($expected, $cookie->toHeaderValue());
 
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable();
         $cookie = SetCookie::thatExpires('name', 'value', $now);
         $timestamp = (int) $now->format('U');
         $expected = sprintf('name=value; expires=%s', gmdate('D, d-M-Y H:i:s T', $timestamp));
