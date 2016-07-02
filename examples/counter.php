@@ -3,10 +3,9 @@
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use HansOtt\PSR7Cookies\SetCookie;
+use HansOtt\PSR7Cookies\Signer\Key;
 use HansOtt\PSR7Cookies\RequestCookies;
 use HansOtt\PSR7Cookies\Signer\Hmac\Sha256;
-use HansOtt\PSR7Cookies\Signer\Hmac\Sha512;
-use HansOtt\PSR7Cookies\Signer\Key;
 
 require_once __DIR__.'/../vendor/autoload.php';
 

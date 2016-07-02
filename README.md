@@ -1,4 +1,4 @@
-# PSR-7 Cookies (Work in progress)
+# PSR-7 Cookies
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -18,12 +18,74 @@ Via Composer
 $ composer require hansott/psr7-cookies
 ```
 
-(Not yet available!)
-
 ## Usage
 
-``` php
-// TODO
+### Get cookies from Psr\Http\Message\ServerRequestInterface
+
+```php
+use HansOtt\PSR7Cookies\RequestCookies;
+
+$serverRequest = ServerRequest::fromGlobals();
+$cookies = RequestCookies::createFromRequest($serverRequest);
+
+if ($cookies->has('counter')) {
+    $counter = $counter->get('counter');
+    $count = $counter->getValue(); // string
+}
+```
+
+### Add cookie to Psr\Http\Message\ResponseInterface
+
+```php
+use HansOtt\PSR7Cookies\SetCookie;
+
+// Set a cookie with custom values.
+$cookie = new SetCookie('name', 'value', time() + 3600, '/path', 'domain.tld', $secure, $httpOnly);
+
+// Set a cookie to delete a cookie.
+$cookie = SetCookie::thatDeletesCookie('name');
+
+// Set a cookie that stays forever (5 years)
+$cookie = SetCookie::thatStaysForever('name', 'value');
+
+// Set a cookie that expires at a given time.
+$now = new DateTimeImmutable();
+$tomorrow = $now->modify('tomorrow');
+$cookie = SetCookie::thatExpires('name', 'value', $tomorrow);
+
+// Add the cookie to a response
+$responseWithCookie = $cookie->addToResponse($response);
+```
+
+### Sign cookies
+
+```php
+use HansOtt\PSR7Cookies\Signer\Hmac\Sha256;
+use HansOtt\PSR7Cookies\Signer\Hmac\Sha512;
+use HansOtt\PSR7Cookies\Signer\Mismatch;
+
+$signer = new Sha256();
+// or
+$signer = new Sha512();
+
+// The key should be at least 32 characters long
+// and generated using a cryptographically secure pseudo random generator.
+$key = new Key(/** ... */);
+
+$counter = SetCookie::thatStaysForever('counter', '10');
+
+// Add the signed cookie to the response
+$signedCounter = $signer->sign($counter, $key);
+
+// Get cookie from response
+$counter = $cookies->get('counter');
+
+try {
+    $counter = $signer->verify($counter, $key);
+    $count = $counter->getValue(); // string
+} catch (Mismatch $e) {
+    // Cookie is tampered!
+}
 ```
 
 ## Change log
