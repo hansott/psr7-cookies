@@ -24,7 +24,9 @@ final class ResponseCookies implements CookieCollection
         $this->guardThatTheseAreCookies($cookies);
 
         foreach ($cookies as $cookie) {
-            $this->cookies[$cookie->getName()] = $cookie;
+            $name = $cookie->getName();
+            $key = mb_strtolower($name);
+            $this->cookies[$key] = $cookie;
         }
     }
 
@@ -53,7 +55,9 @@ final class ResponseCookies implements CookieCollection
      */
     public function has(string $name) : bool
     {
-        return isset($this->cookies[$name]);
+        $key = mb_strtolower($name);
+
+        return isset($this->cookies[$key]);
     }
 
     /**
@@ -67,11 +71,13 @@ final class ResponseCookies implements CookieCollection
      */
     public function get(string $name) : SetCookie
     {
-        if (isset($this->cookies[$name]) === false) {
+        $key = mb_strtolower($name);
+
+        if (isset($this->cookies[$key]) === false) {
             throw CookieNotFound::forName($name);
         }
 
-        return $this->cookies[$name];
+        return $this->cookies[$key];
     }
 
     /**
@@ -83,11 +89,12 @@ final class ResponseCookies implements CookieCollection
      */
     public function addToResponse(ResponseInterface $response) : ResponseInterface
     {
-        $setCookies = array_map(function (SetCookie $setCookie) {
-            return $setCookie->toHeaderValue();
-        }, $this->cookies);
+        $header = [];
+        foreach ($this->cookies as $setCookie) {
+            $header[] = $setCookie->toHeaderValue();
+        }
 
-        return $response->withAddedHeader('Set-Cookie', $setCookies);
+        return $response->withAddedHeader('Set-Cookie', $header);
     }
 
     public function current() : SetCookie
@@ -97,7 +104,15 @@ final class ResponseCookies implements CookieCollection
 
     public function key() : string
     {
-        return key($this->cookies);
+        $key = key($this->cookies);
+
+        if ($key === null) {
+            return $key;
+        }
+
+        $cookie = $this->cookies[$key];
+
+        return $cookie->getName();
     }
 
     public function next()

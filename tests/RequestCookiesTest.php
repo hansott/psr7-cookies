@@ -26,7 +26,10 @@ final class RequestCookiesTest extends PHPUnit_Framework_TestCase
         $cookies = new RequestCookies([$cookie]);
 
         $this->assertTrue($cookies->has('name'));
-        $this->assertEquals($cookie, $cookies->get('name'));
+        $this->assertTrue($cookies->has('Name'));
+        $this->assertTrue($cookies->has('NAME'));
+        $this->assertFalse($cookies->has('unknown'));
+    }
 
         $this->expectException(CookieNotFound::class);
         $cookies->get('unknown');

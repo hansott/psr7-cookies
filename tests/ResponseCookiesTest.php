@@ -17,8 +17,8 @@ final class ResponseCookiesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(
                 'Set-Cookie' => array(
-                    $sessionCookie->getName() => $sessionCookie->toHeaderValue(),
-                    $locale->getName() => $locale->toHeaderValue(),
+                    $sessionCookie->toHeaderValue(),
+                    $locale->toHeaderValue(),
                 )
             ),
             $cookies->addToResponse($response)->getHeaders()
