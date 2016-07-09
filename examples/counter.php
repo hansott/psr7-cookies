@@ -24,7 +24,8 @@ if ($requestCookies->has('counter')) {
     try {
         $counterCookie = $signer->verify($counterCookie, $key);
         $counter = (int) $counterCookie->getValue();
-    } catch (\HansOtt\PSR7Cookies\Signer\Mismatch $e) {}
+    } catch (\HansOtt\PSR7Cookies\Signer\Mismatch $e) {
+    }
 
     $counter++;
 }
