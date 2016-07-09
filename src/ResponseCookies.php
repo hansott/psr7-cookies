@@ -7,6 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 
 final class ResponseCookies implements CookieCollection
 {
+    /**
+     * @var SetCookie[]
+     */
     private $cookies = [];
 
     /**
