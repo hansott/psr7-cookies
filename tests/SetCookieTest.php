@@ -28,16 +28,16 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $cookie = new SetCookie('name', 'value with space');
         $this->assertEquals('name=value+with+space', $cookie->toHeaderValue());
 
-        $cookie = new SetCookie('name', 'value', 0,  '/path/');
+        $cookie = new SetCookie('name', 'value', 0, '/path/');
         $this->assertEquals('name=value; path=/path/', $cookie->toHeaderValue());
 
-        $cookie = new SetCookie('name', 'value', 0,  '/path/', 'domain.tld');
+        $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld');
         $this->assertEquals('name=value; path=/path/; domain=domain.tld', $cookie->toHeaderValue());
 
-        $cookie = new SetCookie('name', 'value', 0,  '/path/', 'domain.tld', true);
+        $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld', true);
         $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure', $cookie->toHeaderValue());
 
-        $cookie = new SetCookie('name', 'value', 0,  '/path/', 'domain.tld', true, true);
+        $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld', true, true);
         $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure; httponly', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value', 1466459967, '', '', true, true);
