@@ -36,7 +36,7 @@ final class ResponseCookies implements CookieCollection
             if (!$cookie instanceof SetCookie) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'Expected array of "%s" instances but instead got "%s" at index %d',
+                        'Expected %s[] as $cookies but instead got "%s" at index %d',
                         static::class,
                         is_object($cookie) ? get_class($cookie) : gettype($cookie),
                         $index
