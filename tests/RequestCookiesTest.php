@@ -24,14 +24,45 @@ final class RequestCookiesTest extends PHPUnit_Framework_TestCase
     {
         $cookie = new Cookie('name', 'value');
         $cookies = new RequestCookies([$cookie]);
-
         $this->assertTrue($cookies->has('name'));
         $this->assertTrue($cookies->has('Name'));
         $this->assertTrue($cookies->has('NAME'));
         $this->assertFalse($cookies->has('unknown'));
     }
 
+    public function test_get()
+    {
+        $sessionCookie = new Cookie('PHPSESSID', 'abc123');
+        $cookies = new RequestCookies([$sessionCookie]);
+        $cookie = $cookies->get('PHPSESSID');
+        $this->assertEquals($sessionCookie, $cookie);
         $this->expectException(CookieNotFound::class);
-        $cookies->get('unknown');
+        $cookies->get('none-existing-cookie');
+    }
+
+    public function test_iterate()
+    {
+        $sessionCookie = new Cookie('PHPSESSID', 'abc123');
+        $locale = new Cookie('locale', 'en');
+        $setCookie = new SetCookie('name', 'value');
+        $cookies = new RequestCookies([$sessionCookie, $locale]);
+
+        $index = 0;
+        foreach ($cookies as $name => $cookie) {
+            switch ($index) {
+                case 0:
+                    $this->assertEquals('PHPSESSID', $name);
+                    $this->assertEquals($sessionCookie, $cookie);
+                    break;
+                case 1:
+                    $this->assertEquals('locale', $name);
+                    $this->assertEquals($locale, $cookie);
+                    break;
+                default:
+                    $this->markTestIncomplete();
+            }
+
+            $index++;
+        }
     }
 }
