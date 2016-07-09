@@ -44,7 +44,6 @@ final class RequestCookiesTest extends PHPUnit_Framework_TestCase
     {
         $sessionCookie = new Cookie('PHPSESSID', 'abc123');
         $locale = new Cookie('locale', 'en');
-        $setCookie = new SetCookie('name', 'value');
         $cookies = new RequestCookies([$sessionCookie, $locale]);
 
         $index = 0;
