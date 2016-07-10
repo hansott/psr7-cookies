@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace HansOtt\PSR7Cookies;
 
+use Iterator;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RequestCookies implements CookieCollection
+final class RequestCookies implements Iterator
 {
     /**
      * @var Cookie[]
