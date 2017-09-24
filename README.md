@@ -7,8 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-
-PSR-7 Cookies
+If you like this package, feel free to [donate me a coffee](https://www.paypal.me/HansOtt/5) ☕️!
 
 ## Install
 
