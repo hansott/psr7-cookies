@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-If you like this package, feel free to [donate me a coffee](https://www.paypal.me/HansOtt/5) ☕️!
+If you like this package, feel free to [buy me a coffee](https://www.paypal.me/HansOtt/5) ☕️.
 
 ## Install
 
