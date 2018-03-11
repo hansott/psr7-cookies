@@ -38,18 +38,18 @@ abstract class Hmac implements Signer
 
     final public function sign(SetCookie $setCookie, Key $key) : SetCookie
     {
+        $name = $setCookie->getName();
         $value = $setCookie->getValue();
-
         $hmac = hash_hmac(
             $this->getAlgorithm(),
-            $value,
+            $name.$value,
             $key->toString()
         );
 
         $value = $hmac . $value;
 
         return new SetCookie(
-            $setCookie->getName(),
+            $name,
             $value,
             $setCookie->expiresAt(),
             $setCookie->getPath(),
@@ -61,12 +61,13 @@ abstract class Hmac implements Signer
 
     final public function verify(Cookie $cookie, Key $key) : Cookie
     {
+        $name = $cookie->getName();
         $value = $cookie->getValue();
         $hmacGiven = mb_substr($value, 0, $this->getHashLength());
         $originalValue = mb_substr($value, $this->getHashLength());
         $hmac = hash_hmac(
             $this->getAlgorithm(),
-            $originalValue,
+            $name.$originalValue,
             $key->toString()
         );
 
