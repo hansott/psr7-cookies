@@ -7,8 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-
-PSR-7 Cookies
+If you like this package, feel free to [buy me a coffee](https://www.paypal.me/HansOtt/5) ☕️.
 
 ## Install
 
@@ -104,7 +103,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details
 
 ## Security
 
-If you discover any security related issues, please email hansott@hotmail.be instead of using the issue tracker.
+If you discover any security related issues, please email **hansott at hotmail be** instead of using the issue tracker.
 
 ## Credits
 
