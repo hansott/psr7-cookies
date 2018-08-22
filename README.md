@@ -28,7 +28,7 @@ $serverRequest = ServerRequest::fromGlobals();
 $cookies = RequestCookies::createFromRequest($serverRequest);
 
 if ($cookies->has('counter')) {
-    $counter = $counter->get('counter');
+    $counter = $cookies->get('counter');
     $count = $counter->getValue(); // string
 }
 ```
