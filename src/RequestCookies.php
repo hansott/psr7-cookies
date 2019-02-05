@@ -59,7 +59,7 @@ final class RequestCookies implements Iterator
         $cookies = [];
         $cookieParams = $request->getCookieParams();
         foreach ($cookieParams as $name => $value) {
-            $cookies[] = new Cookie($name, $value);
+            $cookies[] = new Cookie((string) $name, $value);
         }
 
         return new static($cookies);
