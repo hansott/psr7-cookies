@@ -43,6 +43,9 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $cookie = new SetCookie('name', 'value', 1466459967, '', '', true, true);
         $this->assertEquals('name=value; expires=Mon, 20-Jun-2016 21:59:27 GMT; secure; httponly', $cookie->toHeaderValue());
 
+        $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld', true, true, 'strict');
+        $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure; httponly; samesite=strict', $cookie->toHeaderValue());
+
         $cookie = SetCookie::thatDeletesCookie('name');
         $expected = sprintf('name=deleted; expires=%s', gmdate('D, d-M-Y H:i:s T', 1));
         $this->assertEquals($expected, $cookie->toHeaderValue());

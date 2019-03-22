@@ -55,7 +55,8 @@ abstract class Hmac implements Signer
             $setCookie->getPath(),
             $setCookie->getDomain(),
             $setCookie->isSecure(),
-            $setCookie->isHttpOnly()
+            $setCookie->isHttpOnly(),
+            $setCookie->getSameSite()
         );
     }
 
