@@ -22,6 +22,8 @@ final class SetCookie
 
     private $httpOnly;
 
+    private $sameSite;
+
     /**
      * SetCookie constructor.
      *
@@ -32,6 +34,7 @@ final class SetCookie
      * @param string $domain The domain that the cookie is available to
      * @param bool $secure Whether the cookie should only be transmitted over a secure HTTPS connection from the client
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
+     * @param string $sameSite Specifies if the cookie should be send on a cross site request
      *
      * @throws InvalidArgumentException When the cookie name is not valid
      */
@@ -42,9 +45,11 @@ final class SetCookie
         string $path = '',
         string $domain = '',
         bool $secure = false,
-        bool $httpOnly = false
+        bool $httpOnly = false,
+        string $sameSite = ''
     ) {
         $this->assertValidName($name);
+        $this->assertValidSameSite($sameSite);
         $this->name = $name;
         $this->value = $value;
         $this->expiresAt = $expiresAt;
@@ -52,6 +57,7 @@ final class SetCookie
         $this->domain = $domain;
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
+        $this->sameSite = $sameSite;
     }
 
     public static function thatDeletesCookie(
@@ -59,9 +65,10 @@ final class SetCookie
         string $path = '',
         string $domain = '',
         $secure = false,
-        $httpOnly = false
+        $httpOnly = false,
+        string $sameSite = ''
     ) : SetCookie {
-        return new static($name, 'deleted', 1, $path, $domain, $secure, $httpOnly);
+        return new static($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatExpires(
@@ -71,11 +78,12 @@ final class SetCookie
         string $path = '',
         string $domain = '',
         $secure = false,
-        $httpOnly = false
+        $httpOnly = false,
+        string $sameSite = ''
     ) : SetCookie {
         $expiresAt = (int) $expiresAt->format('U');
 
-        return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly);
+        return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatStaysForever(
@@ -84,11 +92,12 @@ final class SetCookie
         string $path = '',
         string $domain = '',
         $secure = false,
-        $httpOnly = false
+        $httpOnly = false,
+        string $sameSite = ''
     ) : SetCookie {
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
 
-        return new static($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly);
+        return new static($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     private function assertValidName(string $name)
@@ -101,6 +110,13 @@ final class SetCookie
 
         if (empty($name)) {
             throw new InvalidArgumentException('The cookie name cannot be empty.');
+        }
+    }
+
+    private function assertValidSameSite(string $sameSite)
+    {
+        if (!in_array($sameSite, ['', 'lax', 'strict'])) {
+            throw new InvalidArgumentException('The same site attribute must be "lax", "strict" or ""');
         }
     }
 
@@ -139,6 +155,11 @@ final class SetCookie
         return $this->httpOnly;
     }
 
+    public function getSameSite() : string
+    {
+        return $this->sameSite;
+    }
+
     public function toHeaderValue() : string
     {
         $headerValue = sprintf('%s=%s', $this->name, urlencode($this->value));
@@ -164,6 +185,10 @@ final class SetCookie
 
         if ($this->httpOnly) {
             $headerValue .= '; httponly';
+        }
+
+        if ($this->sameSite != '') {
+            $headerValue .= sprintf('; samesite=%s', $this->sameSite);
         }
 
         return $headerValue;
