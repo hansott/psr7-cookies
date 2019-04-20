@@ -19,20 +19,6 @@ $ composer require hansott/psr7-cookies
 
 ## Usage
 
-### Get cookies from Psr\Http\Message\ServerRequestInterface
-
-```php
-use HansOtt\PSR7Cookies\RequestCookies;
-
-$serverRequest = ServerRequest::fromGlobals();
-$cookies = RequestCookies::createFromRequest($serverRequest);
-
-if ($cookies->has('counter')) {
-    $counter = $cookies->get('counter');
-    $count = $counter->getValue(); // string
-}
-```
-
 ### Add cookie to Psr\Http\Message\ResponseInterface
 
 ```php
@@ -55,41 +41,6 @@ $cookie = SetCookie::thatExpires('name', 'value', $tomorrow);
 // Add the cookie to a response
 $responseWithCookie = $cookie->addToResponse($response);
 ```
-
-### Sign cookies
-
-```php
-use HansOtt\PSR7Cookies\Signer\Hmac\Sha256;
-use HansOtt\PSR7Cookies\Signer\Hmac\Sha512;
-use HansOtt\PSR7Cookies\Signer\Mismatch;
-
-$signer = new Sha256();
-// or
-$signer = new Sha512();
-
-// The key should be at least 32 characters long
-// and generated using a cryptographically secure pseudo random generator.
-$key = new Key(/** ... */);
-
-$counter = SetCookie::thatStaysForever('counter', '10');
-
-// Add the signed cookie to the response
-$signedCounter = $signer->sign($counter, $key);
-
-// Get cookie from response
-$counter = $cookies->get('counter');
-
-try {
-    $counter = $signer->verify($counter, $key);
-    $count = $counter->getValue(); // string
-} catch (Mismatch $e) {
-    // Cookie is tampered!
-}
-```
-
-## Change log
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
 
