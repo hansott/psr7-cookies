@@ -8,6 +8,23 @@ use function GuzzleHttp\Psr7\str;
 
 final class SetCookieTest extends \PHPUnit_Framework_TestCase
 {
+    public function test_getters()
+    {
+        $expiresAt = time() + 3600;
+        $path = '/path';
+        $domain = 'domain.tld';
+        $secure = true;
+        $httpOnly = true;
+        $sameSite = 'lax';
+        $setCookie = new SetCookie('name', 'value', $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
+        $this->assertSame($expiresAt, $setCookie->expiresAt());
+        $this->assertSame($path, $setCookie->getPath());
+        $this->assertSame($domain, $setCookie->getDomain());
+        $this->assertSame($secure, $setCookie->isSecure());
+        $this->assertSame($httpOnly, $setCookie->isHttpOnly());
+        $this->assertSame($sameSite, $setCookie->getSameSite());
+    }
+
     public function test_it_can_be_added_to_a_psr_response()
     {
         $cookie = new SetCookie('name', 'value');
