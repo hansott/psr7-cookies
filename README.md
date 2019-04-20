@@ -1,4 +1,4 @@
-# PSR-7 Cookies
+# ![PSR-7 Cookies](art/psr7-cookies.jpg)
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
