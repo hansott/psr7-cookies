@@ -9,19 +9,12 @@ use Psr\Http\Message\ResponseInterface;
 final class SetCookie
 {
     private $name;
-
     private $value;
-
     private $expiresAt;
-
     private $path;
-
     private $domain;
-
     private $secure;
-
     private $httpOnly;
-
     private $sameSite;
 
     /**
