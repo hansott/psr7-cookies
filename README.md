@@ -25,7 +25,7 @@ $ composer require hansott/psr7-cookies
 use HansOtt\PSR7Cookies\SetCookie;
 
 // Set a cookie with custom values.
-$cookie = new SetCookie('name', 'value', time() + 3600, '/path', 'domain.tld', $secure, $httpOnly);
+$cookie = new SetCookie('name', 'value', time() + 3600, '/path', 'domain.tld', $secure, $httpOnly, $sameSite);
 
 // Set a cookie to delete a cookie.
 $cookie = SetCookie::thatDeletesCookie('name');
