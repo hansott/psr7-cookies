@@ -160,7 +160,7 @@ final class SetCookie
         if ($this->expiresAt !== 0) {
             $headerValue .= sprintf(
                 '; expires=%s',
-                gmdate('D, d-M-Y H:i:s T', $this->expiresAt)
+                gmdate('D, d M Y H:i:s T', $this->expiresAt)
             );
         }
 
