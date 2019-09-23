@@ -37,6 +37,22 @@ $cookie = SetCookie::thatStaysForever('name', 'value');
 $now = new DateTimeImmutable();
 $tomorrow = $now->modify('tomorrow');
 $cookie = SetCookie::thatExpires('name', 'value', $tomorrow);
+// Or:
+$cookie = SetCookie::thatExpiresAt('name', 'value', $tomorrow);
+
+// Set a cookie that expires in given seconds.
+$cookie = SetCookie::thatExpiresIn('name', 'value', 3600);
+
+// Set a cookie that expires in 7 days using a date string.
+$cookie = SetCookie::thatExpiresIn('name', 'value', '7 days');
+// Or alternatively:
+$cookie = SetCookie::thatExpiresIn('name', 'value', '1 week');
+
+// Set a cookie that expires in a given DateInterval (7 days in the example).
+$cookie = SetCookie::thatExpiresIn('name', 'value', new DateInterval('P7D'));
+// Or alternatively, but using the date string directly would be shorter:
+$cookie = SetCookie::thatExpiresIn('name', 'value', DateInterval::createFromDateString('7 days'));
+$cookie = SetCookie::thatExpiresIn('name', 'value', DateInterval::createFromDateString('1 week'));
 
 // Add the cookie to a response
 $responseWithCookie = $cookie->addToResponse($response);
