@@ -3,8 +3,22 @@ declare(strict_types=1);
 
 namespace HansOtt\PSR7Cookies;
 
+use DateInterval;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface;
+
+use function get_class;
+use function gettype;
+use function gmdate;
+use function in_array;
+use function is_int;
+use function is_object;
+use function is_string;
+use function preg_match;
+use function sprintf;
+use function time;
+use function urlencode;
 
 final class SetCookie
 {
@@ -74,7 +88,58 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
+        return self::thatExpiresAt($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
+    }
+
+    public static function thatExpiresAt(
+        string $name,
+        string $value,
+        DateTimeInterface $expiresAt,
+        string $path = '',
+        string $domain = '',
+        bool $secure = false,
+        bool $httpOnly = false,
+        string $sameSite = ''
+    ) : SetCookie {
         $expiresAt = (int) $expiresAt->format('U');
+
+        return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
+    }
+
+    /**
+     * Create a cookie that expires in given seconds or time-interval
+     * @param int|null $expiresIn
+     */
+    public static function thatExpiresIn(
+        string $name,
+        string $value,
+        $expiresIn,
+        string $path = '',
+        string $domain = '',
+        bool $secure = false,
+        bool $httpOnly = false,
+        string $sameSite = ''
+    ) : SetCookie {
+        $time = time();
+        if (is_int($expiresIn)) {
+            $expiresAt = $time + $expiresIn;
+        } elseif (is_string($expiresIn)) {
+            $expiresAt = strtotime($expiresIn, $time);
+            if ($expiresAt === false) {
+                throw new InvalidArgumentException(
+                    'The provided "$expiresIn" value is not a valid date interval string!'
+                );
+            }
+        } elseif ($expiresIn instanceof DateInterval) {
+            $d1 = new DateTimeImmutable("@{$time}");
+            $d2 = $d1->add($expiresIn);
+            $expiresAt = $time + ($d2->getTimestamp() - $d1->getTimestamp());
+        } else {
+            throw new InvalidArgumentException(sprintf(
+                'The "$expiresIn" argument MUST be an integer, a string or a DateInterval instance, "%s" provided!',
+                is_object($expiresIn) ? get_class($expiresIn) : gettype($expiresIn)
+            ));
+        }
 
         return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
     }
@@ -88,7 +153,7 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
-        $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
+        $expiresInFiveYear = time() + 5 * 365 * 24 * 3600;
 
         return new static($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
     }

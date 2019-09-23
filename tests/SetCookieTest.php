@@ -2,6 +2,7 @@
 
 namespace HansOtt\PSR7Cookies;
 
+use DateInterval;
 use DateTimeImmutable;
 use GuzzleHttp\Psr7\Response;
 use function GuzzleHttp\Psr7\str;
@@ -89,5 +90,96 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
         $expected = sprintf('name=value; expires=%s; path=/path/; domain=domain.tld', gmdate(self::$HTTP_DATE_FORMAT, $expiresInFiveYear));
         $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        $expireTS = time();
+        $now = new DateTimeImmutable("@{$expireTS}");
+        $cookie = SetCookie::thatExpiresAt('name', 'value', $now);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test positive seconds interval
+        $expireSecs = 123;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireSecs);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test negative seconds interval
+        $expireSecs = -123;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireSecs);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test positive string expression interval
+        $expireStr = '1 day';
+        $expireSecs = 1 * 86400;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test negative string expression interval
+        $expireStr = '-1 day';
+        $expireSecs = -1 * 86400;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test 0 string expression interval
+        $expireStr = '0 day';
+        $expireSecs = 0 * 86400;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test positive DateInterval
+        $expireStr = '1 day';
+        $expireSecs = 1 * 86400;
+        $expireTS = time() + $expireSecs;
+        $expireIn = DateInterval::createFromDateString($expireStr);
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test negative DateInterval
+        $expireStr = '-1 day';
+        $expireSecs = -1 * 86400;
+        $expireTS = time() + $expireSecs;
+        $expireIn = DateInterval::createFromDateString($expireStr);
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+
+        // test empty DateInterval
+        $expireIn = new DateInterval('PT0S');
+        $expireSecs = 0;
+        $expireTS = time() + $expireSecs;
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $this->assertEquals($expected, $cookie->toHeaderValue());
+    }
+
+    /**
+     * @dataProvider invalidExpiredInProvider
+     */
+    public function test_that_expires_in_raises_exception_for_invalid_values($expiredIn)
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $cookie = SetCookie::thatExpiresIn('name', 'value', $expiredIn);
+    }
+
+    public function invalidExpiredInProvider()
+    {
+        return [
+            [null],
+            [true],
+            [false],
+            [1.23],
+            [new \stdClass],
+            ['not-a-valid-interval'],
+        ];
     }
 }
