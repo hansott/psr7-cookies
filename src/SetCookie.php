@@ -108,7 +108,7 @@ final class SetCookie
 
     /**
      * Create a cookie that expires in given seconds or time-interval
-     * @param int|null $expiresIn
+     * @param int|string|DateInterval $expiresIn
      */
     public static function thatExpiresIn(
         string $name,
