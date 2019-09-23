@@ -8,6 +8,17 @@ use function GuzzleHttp\Psr7\str;
 
 final class SetCookieTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * The Response cookie rfc date format
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date#Syntax
+     * @see https://tools.ietf.org/html/rfc822#section-5
+     *
+     * @var string Response cookie rfc date format
+     */
+    private static $HTTP_DATE_FORMAT = 'D, d M Y H:i:s T';
+
     public function test_getters()
     {
         $expiresAt = time() + 3600;
@@ -59,24 +70,24 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure; httponly', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value', 1466459967, '', '', true, true);
-        $this->assertEquals('name=value; expires=Mon, 20-Jun-2016 21:59:27 GMT; secure; httponly', $cookie->toHeaderValue());
+        $this->assertEquals('name=value; expires=Mon, 20 Jun 2016 21:59:27 GMT; secure; httponly', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld', true, true, 'strict');
         $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure; httponly; samesite=strict', $cookie->toHeaderValue());
 
         $cookie = SetCookie::thatDeletesCookie('name');
-        $expected = sprintf('name=deleted; expires=%s', gmdate('D, d-M-Y H:i:s T', 1));
+        $expected = sprintf('name=deleted; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, 1));
         $this->assertEquals($expected, $cookie->toHeaderValue());
 
         $now = new DateTimeImmutable();
         $cookie = SetCookie::thatExpires('name', 'value', $now);
         $timestamp = (int) $now->format('U');
-        $expected = sprintf('name=value; expires=%s', gmdate('D, d-M-Y H:i:s T', $timestamp));
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $timestamp));
         $this->assertEquals($expected, $cookie->toHeaderValue());
 
         $cookie = SetCookie::thatStaysForever('name', 'value', '/path/', 'domain.tld');
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
-        $expected = sprintf('name=value; expires=%s; path=/path/; domain=domain.tld', gmdate('D, d-M-Y H:i:s T', $expiresInFiveYear));
+        $expected = sprintf('name=value; expires=%s; path=/path/; domain=domain.tld', gmdate(self::$HTTP_DATE_FORMAT, $expiresInFiveYear));
         $this->assertEquals($expected, $cookie->toHeaderValue());
     }
 }
