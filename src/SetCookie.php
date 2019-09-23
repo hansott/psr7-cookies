@@ -57,8 +57,8 @@ final class SetCookie
         string $name,
         string $path = '',
         string $domain = '',
-        $secure = false,
-        $httpOnly = false,
+        bool $secure = false,
+        bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
         return new static($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
@@ -70,8 +70,8 @@ final class SetCookie
         DateTimeInterface $expiresAt,
         string $path = '',
         string $domain = '',
-        $secure = false,
-        $httpOnly = false,
+        bool $secure = false,
+        bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
         $expiresAt = (int) $expiresAt->format('U');
@@ -84,8 +84,8 @@ final class SetCookie
         string $value,
         string $path = '',
         string $domain = '',
-        $secure = false,
-        $httpOnly = false,
+        bool $secure = false,
+        bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
