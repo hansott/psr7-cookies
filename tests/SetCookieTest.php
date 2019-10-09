@@ -31,14 +31,14 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $name = 'me_likey';
         $value = 'cookies';
         $setCookie = new SetCookie($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
-        self::assertSame($name, $setCookie->getName());
-        self::assertSame($value, $setCookie->getValue());
-        self::assertSame($expiresAt, $setCookie->expiresAt());
-        self::assertSame($path, $setCookie->getPath());
-        self::assertSame($domain, $setCookie->getDomain());
-        self::assertSame($secure, $setCookie->isSecure());
-        self::assertSame($httpOnly, $setCookie->isHttpOnly());
-        self::assertSame($sameSite, $setCookie->getSameSite());
+        $this->assertSame($name, $setCookie->getName());
+        $this->assertSame($value, $setCookie->getValue());
+        $this->assertSame($expiresAt, $setCookie->expiresAt());
+        $this->assertSame($path, $setCookie->getPath());
+        $this->assertSame($domain, $setCookie->getDomain());
+        $this->assertSame($secure, $setCookie->isSecure());
+        $this->assertSame($httpOnly, $setCookie->isHttpOnly());
+        $this->assertSame($sameSite, $setCookie->getSameSite());
     }
 
     public function test_it_can_be_added_to_a_psr_response()
@@ -48,25 +48,25 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $httpResponse = str($responseWithCookie);
         $expected = 'HTTP/1.1 200 OK' . "\r\n";
         $expected .= 'Set-Cookie: name=value' . "\r\n\r\n";
-        self::assertEquals($expected, $httpResponse);
+        $this->assertEquals($expected, $httpResponse);
     }
 
     public function test_it_converts_to_header_value()
     {
         $cookie = new SetCookie('name', 'value');
-        self::assertEquals('name=value', $cookie->toHeaderValue());
+        $this->assertEquals('name=value', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('NaMe', 'value', 0);
-        self::assertEquals('NaMe=value', $cookie->toHeaderValue());
+        $this->assertEquals('NaMe=value', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value with space');
-        self::assertEquals('name=value+with+space', $cookie->toHeaderValue());
+        $this->assertEquals('name=value+with+space', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value', 0, '/path/');
-        self::assertEquals('name=value; path=/path/', $cookie->toHeaderValue());
+        $this->assertEquals('name=value; path=/path/', $cookie->toHeaderValue());
 
         $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld');
-        self::assertEquals('name=value; path=/path/; domain=domain.tld', $cookie->toHeaderValue());
+        $this->assertEquals('name=value; path=/path/; domain=domain.tld', $cookie->toHeaderValue());
 
         $cookie = new SetCookie(
             'name',
@@ -76,7 +76,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
             'domain.tld',
             true
         );
-        self::assertEquals('name=value; path=/path/; domain=domain.tld; secure', $cookie->toHeaderValue());
+        $this->assertEquals('name=value; path=/path/; domain=domain.tld; secure', $cookie->toHeaderValue());
 
         $cookie = new SetCookie(
             'name',
@@ -87,7 +87,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
             true,
             true
         );
-        self::assertEquals(
+        $this->assertEquals(
             'name=value; path=/path/; domain=domain.tld; secure; httponly',
             $cookie->toHeaderValue()
         );
@@ -101,7 +101,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
             true,
             true
         );
-        self::assertEquals(
+        $this->assertEquals(
             'name=value; expires=Mon, 20 Jun 2016 21:59:27 GMT; secure; httponly',
             $cookie->toHeaderValue()
         );
@@ -116,20 +116,20 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
             true,
             'strict'
         );
-        self::assertEquals(
+        $this->assertEquals(
             'name=value; path=/path/; domain=domain.tld; secure; httponly; samesite=strict',
             $cookie->toHeaderValue()
         );
 
         $cookie = SetCookie::thatDeletesCookie('name');
         $expected = sprintf('name=deleted; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, 1));
-        self::assertEquals($expected, $cookie->toHeaderValue());
+        $this->assertEquals($expected, $cookie->toHeaderValue());
 
         $now = new DateTimeImmutable();
         $cookie = SetCookie::thatExpires('name', 'value', $now);
         $timestamp = (int)$now->format('U');
         $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $timestamp));
-        self::assertEquals($expected, $cookie->toHeaderValue());
+        $this->assertEquals($expected, $cookie->toHeaderValue());
 
         $cookie = SetCookie::thatStaysForever('name', 'value', '/path/', 'domain.tld');
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
@@ -137,7 +137,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
             'name=value; expires=%s; path=/path/; domain=domain.tld',
             gmdate(self::$HTTP_DATE_FORMAT, $expiresInFiveYear)
         );
-        self::assertEquals($expected, $cookie->toHeaderValue());
+        $this->assertEquals($expected, $cookie->toHeaderValue());
     }
 
     public function test_throws_exception_when_invalid_name()
