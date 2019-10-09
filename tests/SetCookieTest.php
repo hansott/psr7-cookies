@@ -32,7 +32,7 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $value = 'cookies';
         $setCookie = new SetCookie($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
         self::assertSame($name, $setCookie->getName());
-        self::assertSame($name, $setCookie->getName());
+        self::assertSame($value, $setCookie->getValue());
         self::assertSame($expiresAt, $setCookie->expiresAt());
         self::assertSame($path, $setCookie->getPath());
         self::assertSame($domain, $setCookie->getDomain());
