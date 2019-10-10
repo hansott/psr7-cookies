@@ -91,75 +91,125 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $expected = sprintf('name=value; expires=%s; path=/path/; domain=domain.tld', gmdate(self::$HTTP_DATE_FORMAT, $expiresInFiveYear));
         $this->assertEquals($expected, $cookie->toHeaderValue());
 
-        $expireTS = time();
-        $now = new DateTimeImmutable("@{$expireTS}");
+        $timestamp = time();
+        $now = new DateTimeImmutable("@{$timestamp}");
         $cookie = SetCookie::thatExpiresAt('name', 'value', $now);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
+        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $timestamp));
         $this->assertEquals($expected, $cookie->toHeaderValue());
 
         // test positive seconds interval
         $expireSecs = 123;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireSecs);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test negative seconds interval
         $expireSecs = -123;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireSecs);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test positive string expression interval
         $expireStr = '1 day';
         $expireSecs = 1 * 86400;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test negative string expression interval
         $expireStr = '-1 day';
         $expireSecs = -1 * 86400;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test 0 string expression interval
         $expireStr = '0 day';
         $expireSecs = 0 * 86400;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireStr);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test positive DateInterval
         $expireStr = '1 day';
         $expireSecs = 1 * 86400;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $expireIn = DateInterval::createFromDateString($expireStr);
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test negative DateInterval
         $expireStr = '-1 day';
         $expireSecs = -1 * 86400;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $expireIn = DateInterval::createFromDateString($expireStr);
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
 
         // test empty DateInterval
         $expireIn = new DateInterval('PT0S');
         $expireSecs = 0;
-        $expireTS = time() + $expireSecs;
+        $excpectedTSmin = time() + $expireSecs;
         $cookie = SetCookie::thatExpiresIn('name', 'value', $expireIn);
-        $expected = sprintf('name=value; expires=%s', gmdate(self::$HTTP_DATE_FORMAT, $expireTS));
-        $this->assertEquals($expected, $cookie->toHeaderValue());
+        $excpectedTSmax = time() + $expireSecs;
+        $actualTS = $this->extractExpireTimestampFrom($cookie->toHeaderValue());
+        $this->assertGreaterThanOrEqual($excpectedTSmin, $actualTS);
+        $this->assertLessThanOrEqual($excpectedTSmax, $actualTS);
+    }
+
+    private function extractExpireTimestampFrom(string $headerValue): int
+    {
+        static $expireRegex
+            = '/'
+            . '(Sun|Mon|Tue||Wed|Thu|Fri|Sat)\,'
+            . ' [0-3][0-9]'
+            . ' (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)'
+            . ' [0-9]{4}'
+            . ' [0-2][0-9]\:[0-5][0-9]:[0-5][0-9]'
+            . ' GMT'
+            . '/';
+
+        $expireString = null;
+
+        $parts = explode(';', $headerValue);
+        foreach ($parts as $part) {
+            $av = explode('=', $part);
+            $avName = strtolower(trim($av[0]));
+            if ($avName === 'expires') {
+                $expireString = $av[1] ?? null;
+                break;
+            }
+        }
+
+        $this->assertNotNull($expireString);
+        $this->assertRegExp($expireRegex, $expireString);
+
+        $expireTimestamp = strtotime($expireString);
+
+        $this->assertNotFalse($expireTimestamp);
+
+        return $expireTimestamp;
     }
 
     /**
