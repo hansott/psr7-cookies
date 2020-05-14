@@ -22,6 +22,8 @@ $ composer require hansott/psr7-cookies
 ### Add cookie to Psr\Http\Message\ResponseInterface
 
 ```php
+<?php
+
 use HansOtt\PSR7Cookies\SetCookie;
 
 // Set a cookie with custom values.
