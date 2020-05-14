@@ -90,4 +90,14 @@ final class SetCookieTest extends \PHPUnit_Framework_TestCase
         $expected = sprintf('name=value; expires=%s; path=/path/; domain=domain.tld', gmdate(self::$HTTP_DATE_FORMAT, $expiresInFiveYear));
         $this->assertEquals($expected, $cookie->toHeaderValue());
     }
+
+    public function test_it_only_allows_samesite_none_with_secure()
+    {
+        $cookie = new SetCookie('name', 'value', time(), '/', '', true, true, 'none');
+        $this->assertEquals('none', $cookie->getSameSite());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("The same site attribute can only be \"none\" when secure is set to true");
+        $cookie = new SetCookie('name', 'value', time(), '/', '', false, true, 'none');
+    }
 }

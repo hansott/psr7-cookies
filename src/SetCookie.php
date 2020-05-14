@@ -42,7 +42,7 @@ final class SetCookie
         string $sameSite = ''
     ) {
         $this->assertValidName($name);
-        $this->assertValidSameSite($sameSite);
+        $this->assertValidSameSite($sameSite, $secure);
         $this->name = $name;
         $this->value = $value;
         $this->expiresAt = $expiresAt;
@@ -106,10 +106,14 @@ final class SetCookie
         }
     }
 
-    private function assertValidSameSite(string $sameSite)
+    private function assertValidSameSite(string $sameSite, bool $secure)
     {
-        if (!in_array($sameSite, ['', 'lax', 'strict'])) {
-            throw new InvalidArgumentException('The same site attribute must be "lax", "strict" or ""');
+        if (!in_array($sameSite, ['', 'lax', 'strict', 'none'])) {
+            throw new InvalidArgumentException('The same site attribute must be "lax", "strict", "none" or ""');
+        }
+
+        if ($sameSite === 'none' && !$secure) {
+            throw new InvalidArgumentException('The same site attribute can only be "none" when secure is set to true');
         }
     }
 
