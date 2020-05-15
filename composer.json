@@ -1,7 +1,7 @@
 {
     "name": "hansott/psr7-cookies",
     "type": "library",
-    "description": "PSR-7 Cookies",
+    "description": "🍪 bakes cookies for PSR-7 messages",
     "keywords": [
         "hansott",
         "psr7-cookies",
