@@ -99,6 +99,6 @@ final class SetCookieTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The same site attribute can only be \"none\" when secure is set to true");
-        $cookie = new SetCookie('name', 'value', time(), '/', '', false, true, 'none');
+        new SetCookie('name', 'value', time(), '/', '', false, true, 'none');
     }
 }
