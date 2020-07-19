@@ -18,10 +18,11 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
-  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
+  - if [[ "$TRAVIS_PHP_VERSION" != "nightly" ]]; then travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist; fi
+  - if [[ "$TRAVIS_PHP_VERSION" = "nightly" ]]; then travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist --ignore-platform-reqs; fi
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
-  - if [[ "$TRAVIS_PHP_VERSION" != "nightly" ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+  - if [[ "$TRAVIS_PHP_VERSION" != "nightly" ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi
