@@ -4,9 +4,10 @@ namespace HansOtt\PSR7Cookies;
 
 use DateTimeImmutable;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use function GuzzleHttp\Psr7\str;
 
-final class SetCookieTest extends \PHPUnit_Framework_TestCase
+final class SetCookieTest extends TestCase
 {
     /**
      * The Response cookie rfc date format
