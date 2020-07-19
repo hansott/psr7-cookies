@@ -184,7 +184,7 @@ final class SetCookie
             $headerValue .= '; httponly';
         }
 
-        if ($this->sameSite != '') {
+        if ($this->sameSite !== '') {
             $headerValue .= sprintf('; samesite=%s', $this->sameSite);
         }
 
