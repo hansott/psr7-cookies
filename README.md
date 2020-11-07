@@ -4,8 +4,6 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]](LICENSE.md)
 
-If you like this package, feel free to [buy me a coffee](https://www.paypal.me/HansOtt/5) ☕️.
-
 ## Install
 
 Via Composer
@@ -13,6 +11,13 @@ Via Composer
 ``` bash
 $ composer require hansott/psr7-cookies
 ```
+
+
+## Donate
+
+If you like this package, please consider buying me a coffee. Thank you for your support! 🙇‍♂️
+
+<a href="https://www.buymeacoffee.com/hansott" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"></a>
 
 ## Usage
 
