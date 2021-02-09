@@ -1,6 +1,7 @@
 # ![PSR-7 Cookies](art/psr7-cookies.jpg)
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
+[![Supported PHP versions][ico-php-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]](LICENSE.md)
 
@@ -72,6 +73,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-version]: https://img.shields.io/packagist/v/hansott/psr7-cookies.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/hansott/psr7-cookies.svg?style=flat-square
+[ico-php-version]: https://img.shields.io/packagist/php-v/hansott/psr7-cookies.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/hansott/psr7-cookies
 [link-downloads]: https://packagist.org/packages/hansott/psr7-cookies
