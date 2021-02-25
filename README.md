@@ -13,13 +13,6 @@ Via Composer
 $ composer require hansott/psr7-cookies
 ```
 
-
-## Donate
-
-If you like this package, please consider buying me a coffee. Thank you for your support! 🙇‍♂️
-
-<a href="https://www.buymeacoffee.com/hansott" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee"></a>
-
 ## Usage
 
 ### Add cookie to Psr\Http\Message\ResponseInterface
