@@ -39,10 +39,6 @@ final class SetCookieTest extends TestCase
 
     public function test_it_can_be_added_to_a_psr_response()
     {
-        if(!method_exists(Message::class, 'toString')) {
-            $this->markTestSkipped();
-        }
-
         $cookie = new SetCookie('name', 'value');
         $responseWithCookie = $cookie->addToResponse(new Response());
         $httpResponse = Message::toString($responseWithCookie);
