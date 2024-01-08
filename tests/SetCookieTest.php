@@ -3,9 +3,9 @@
 namespace HansOtt\PSR7Cookies;
 
 use DateTimeImmutable;
+use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use function GuzzleHttp\Psr7\str;
 
 final class SetCookieTest extends TestCase
 {
@@ -41,7 +41,7 @@ final class SetCookieTest extends TestCase
     {
         $cookie = new SetCookie('name', 'value');
         $responseWithCookie = $cookie->addToResponse(new Response());
-        $httpResponse = str($responseWithCookie);
+        $httpResponse = Message::toString($responseWithCookie);
         $expected = 'HTTP/1.1 200 OK'."\r\n";
         $expected .= 'Set-Cookie: name=value'."\r\n\r\n";
         $this->assertEquals($expected, $httpResponse);
