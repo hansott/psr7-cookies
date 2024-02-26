@@ -61,6 +61,12 @@ final class SetCookieTest extends TestCase
         $cookie = new SetCookie('name', 'value', 0, '/path/');
         $this->assertEquals('name=value; path=/path/', $cookie->toHeaderValue());
 
+        $cookie = new SetCookie(' name  ', '   value  ', 0, '   /path/ '); // whitespace
+        $this->assertEquals('name=value; path=/path/', $cookie->toHeaderValue());
+
+        $cookie = new SetCookie('name', 'value', 0, '0'); // falsey path value
+        $this->assertEquals('name=value; path=0', $cookie->toHeaderValue());
+
         $cookie = new SetCookie('name', 'value', 0, '/path/', 'domain.tld');
         $this->assertEquals('name=value; path=/path/; domain=domain.tld', $cookie->toHeaderValue());
 

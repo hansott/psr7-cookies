@@ -41,16 +41,17 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) {
-        $this->assertValidName($name);
-        $this->assertValidSameSite($sameSite, $secure);
-        $this->name = $name;
-        $this->value = $value;
+        $this->name = trim($name);
+        $this->value = trim($value);
         $this->expiresAt = $expiresAt;
-        $this->path = $path;
-        $this->domain = $domain;
+        $this->path = trim($path);
+        $this->domain = trim($domain);
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
-        $this->sameSite = $sameSite;
+        $this->sameSite = trim($sameSite);
+
+        $this->assertValidName($this->name);
+        $this->assertValidSameSite($this->sameSite, $this->secure);
     }
 
     public static function thatDeletesCookie(
@@ -168,11 +169,11 @@ final class SetCookie
             );
         }
 
-        if (empty($this->path) === false) {
+        if ($this->path !== '') {
             $headerValue .= sprintf('; path=%s', $this->path);
         }
 
-        if (empty($this->domain) === false) {
+        if ($this->domain !== '') {
             $headerValue .= sprintf('; domain=%s', $this->domain);
         }
 
