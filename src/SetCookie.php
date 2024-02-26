@@ -62,7 +62,7 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
-        return new static($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatExpires(
@@ -77,7 +77,7 @@ final class SetCookie
     ) : SetCookie {
         $expiresAt = (int) $expiresAt->format('U');
 
-        return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatStaysForever(
@@ -91,7 +91,7 @@ final class SetCookie
     ) : SetCookie {
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
 
-        return new static($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     private function assertValidName(string $name)
