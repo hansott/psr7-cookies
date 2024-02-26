@@ -6,6 +6,9 @@ use DateTimeImmutable;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use function gmdate;
+use function sprintf;
+use function time;
 
 final class SetCookieTest extends TestCase
 {

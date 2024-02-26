@@ -5,6 +5,13 @@ namespace HansOtt\PSR7Cookies;
 
 use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface;
+use function gmdate;
+use function in_array;
+use function preg_match;
+use function sprintf;
+use function time;
+use function trim;
+use function urlencode;
 
 final class SetCookie
 {
