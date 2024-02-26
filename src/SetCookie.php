@@ -5,6 +5,13 @@ namespace HansOtt\PSR7Cookies;
 
 use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface;
+use function gmdate;
+use function in_array;
+use function preg_match;
+use function sprintf;
+use function time;
+use function trim;
+use function urlencode;
 
 final class SetCookie
 {
@@ -41,16 +48,17 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) {
-        $this->assertValidName($name);
-        $this->assertValidSameSite($sameSite, $secure);
-        $this->name = $name;
-        $this->value = $value;
+        $this->name = trim($name);
+        $this->value = trim($value);
         $this->expiresAt = $expiresAt;
-        $this->path = $path;
-        $this->domain = $domain;
+        $this->path = trim($path);
+        $this->domain = trim($domain);
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
-        $this->sameSite = $sameSite;
+        $this->sameSite = trim($sameSite);
+
+        $this->assertValidName($this->name);
+        $this->assertValidSameSite($this->sameSite, $this->secure);
     }
 
     public static function thatDeletesCookie(
@@ -61,7 +69,7 @@ final class SetCookie
         bool $httpOnly = false,
         string $sameSite = ''
     ) : SetCookie {
-        return new static($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, 'deleted', 1, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatExpires(
@@ -76,7 +84,7 @@ final class SetCookie
     ) : SetCookie {
         $expiresAt = (int) $expiresAt->format('U');
 
-        return new static($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, $value, $expiresAt, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     public static function thatStaysForever(
@@ -90,7 +98,7 @@ final class SetCookie
     ) : SetCookie {
         $expiresInFiveYear = time() + 5 * 365 * 3600 * 24;
 
-        return new static($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
+        return new self($name, $value, $expiresInFiveYear, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     private function assertValidName(string $name)
@@ -168,11 +176,11 @@ final class SetCookie
             );
         }
 
-        if (empty($this->path) === false) {
+        if ($this->path !== '') {
             $headerValue .= sprintf('; path=%s', $this->path);
         }
 
-        if (empty($this->domain) === false) {
+        if ($this->domain !== '') {
             $headerValue .= sprintf('; domain=%s', $this->domain);
         }
 
